@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 using namespace std;
 
 #define FILE_WORDS 5
@@ -56,7 +57,7 @@ vector<string> readWords() {
 }
 
 int main() {
-    srand(time(NULL));
+    srand((uint)time(NULL)*getpid());
     vector<string> words = readWords();
     generateFiles(words);
 }
