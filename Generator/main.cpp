@@ -5,6 +5,11 @@
 #include <random>
 #include <vector>
 
+void usage(const std::string &filename) {
+    std::cerr << "usage: " << filename << " INPUT_FILE OUTPUT_FILE [-w WORDS_PER_LINE] [-s RNG_SEED]\n";
+    exit(1);
+}
+
 int count_words(std::ifstream &inp) {
     int count = 0;
     std::string word;
@@ -27,39 +32,75 @@ std::vector<std::string> filetovec(std::ifstream &file) {
     return input_words;
 }
 
-void vectofile(std::ofstream &file, const std::vector<std::string> &vec) {
+void vectofile(std::ofstream &file, const std::vector<std::string> &vec, int wperline) {
     int n = (int)vec.size();
     if (n > 0) {
-        file << vec[0];
-        for (int i = 1; i < n; ++i) {
-            file << " " << vec[i];
+        for (int i = 0; i < n; ++i) {
+            file << vec[i];
+            for (int w = 1; w < wperline && i < n;) {
+                file << " " << vec[i];
+                ++i;
+                ++w;
+            }
+            file << std::endl;
         }
     }
-    file << std::endl;
-    file.clear();
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "usage: %s INPUT_FILE OUTPUT_FILE\n", argv[0]);
-        exit(1);
+    if (argc < 3) {
+        usage(std::string(argv[0]));
     }
+
+    std::string words_per_line, rng_seed;
+    for (int i = 3; i < argc; ++i) {
+        std::string option(argv[i]);
+        if (option == "-w") {
+            ++i;
+            if (i < argc) {
+                words_per_line = std::string(argv[i]);
+            }
+        }
+        else if (option == "-s") {
+            ++i;
+            if (i < argc) {
+                rng_seed = std::string(argv[i]);
+            }
+        }
+    }
+
     std::ifstream inp(argv[1]);
     if (inp.fail()) {
-        fprintf(stderr, "Unable to open input file %s\n", argv[1]);
+        std::cerr << "Unable to open input file " << argv[1] << std::endl;
         exit(1);
     }
     std::ofstream out(argv[2]);
     if (out.fail()) {
-        fprintf(stderr, "Unable to open output file %s\n", argv[1]);
+        std::cerr << "Unable to open input file " << argv[1] << std::endl;
         exit(1);
     }
 
+    // Read file
     std::vector<std::string> input_words = filetovec(inp);
 
-    std::random_device rd;
-    std::mt19937 rng(rd());
+    // Random shuffle
+    std::mt19937 rng;
+    if (rng_seed != "") {
+        rng.seed(std::stoul(rng_seed));
+    }
+    else {
+        std::random_device rd;
+        rng.seed(rd());
+    }
     std::shuffle(input_words.begin(), input_words.end(), rng);
 
-    vectofile(out, input_words);
+    // Output to file
+    int wperline = (int)input_words.size();
+    if (words_per_line != "") {
+        int w = std::stoi(words_per_line);
+        if (w > 0) {
+            wperline = w;
+        }
+    }
+    vectofile(out, input_words, wperline);
 }
