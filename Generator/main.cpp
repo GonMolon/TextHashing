@@ -1,63 +1,65 @@
-#include <iostream>
+#include <algorithm>
 #include <fstream>
+#include <iostream>
+#include <stdlib.h> //exit()
+#include <random>
 #include <vector>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
-using namespace std;
 
-#define FILE_WORDS 5
-#define TOTAL_FILES 20
-#define PATTER_NAME "file"
-
-void randomize(vector<int>& permutation) {
-    for(int i = 0; i < FILE_WORDS; ++i) {
-        int to = rand() % FILE_WORDS;
-        int aux = permutation[i];
-        permutation[i] = permutation[to];
-        permutation[to] = aux;
+int count_words(std::ifstream &inp) {
+    int count = 0;
+    std::string word;
+    while (inp >> word) {
+        ++count;
     }
+    inp.clear();
+    inp.seekg(0, std::ios::beg);
+    return count;
 }
 
-vector<int> generatePermutation() {
-    vector<int> permutation(FILE_WORDS);
-    for(int i = 0; i < FILE_WORDS; ++i) {
-        permutation[i] = i;
+std::vector<std::string> filetovec(std::ifstream &file) {
+    std::size_t n = (std::size_t)count_words(file);
+    std::vector<std::string> input_words(n);
+    for (int i = 0; i < n; ++i) {
+        file >> input_words[i];
     }
-    return permutation;
+    file.clear();
+    file.seekg(0, std::ios::beg);
+    return input_words;
 }
 
-void generateFile(string fileName, const vector<int>& permutation, const vector<string>& words) {
-    ofstream file(PATTER_NAME + fileName);
-    for(int i = 0; i < FILE_WORDS; ++i) {
-        if(i != 0) {
-            file << " ";
+void vectofile(std::ofstream &file, const std::vector<std::string> &vec) {
+    int n = (int)vec.size();
+    if (n > 0) {
+        file << vec[0];
+        for (int i = 1; i < n; ++i) {
+            file << " " << vec[i];
         }
-        file << words[permutation[i]];
     }
-    file.close();
+    file << std::endl;
+    file.clear();
 }
 
-void generateFiles(const vector<string>& words) {
-    vector<int> permutation = generatePermutation();
-    for(int i = 0; i < TOTAL_FILES; ++i) {
-        randomize(permutation);
-        generateFile(to_string(i+1) + ".txt", permutation, words);
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "usage: %s INPUT_FILE OUTPUT_FILE\n", argv[0]);
+        exit(1);
     }
-}
-
-vector<string> readWords() {
-    vector<string> words(FILE_WORDS);
-    int n = FILE_WORDS;
-    while(n > 0) {
-        cin >> words[n-1];
-        --n;
+    std::ifstream inp(argv[1]);
+    if (inp.fail()) {
+        fprintf(stderr, "Unable to open input file %s\n", argv[1]);
+        exit(1);
     }
-    return words;
-}
+    std::ofstream out(argv[2]);
+    if (out.fail()) {
+        fprintf(stderr, "Unable to open output file %s\n", argv[1]);
+        exit(1);
+    }
 
-int main() {
-    srand((uint)time(NULL)*getpid());
-    vector<string> words = readWords();
-    generateFiles(words);
+    std::vector<std::string> input_words = filetovec(inp);
+
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::shuffle(input_words.begin(), input_words.end(), rng);
+
+    vectofile(out, input_words);
 }
