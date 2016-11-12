@@ -62,8 +62,7 @@ int main(int argc, char *argv[]) {
             if (i < argc) {
                 words_per_line = std::string(argv[i]);
             }
-        }
-        else if (option == "-s") {
+        } else if (option == "-s") {
             ++i;
             if (i < argc) {
                 rng_seed = std::string(argv[i]);
@@ -89,8 +88,7 @@ int main(int argc, char *argv[]) {
     std::mt19937 rng;
     if (rng_seed != "") {
         rng.seed(std::stoul(rng_seed));
-    }
-    else {
+    } else {
         std::random_device rd;
         rng.seed(rd());
     }
