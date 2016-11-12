@@ -26,7 +26,7 @@ public:
 
     Jaccard_fool(string nameone, string nametwo, int k) {
         if (k < 1) {
-            std::cerr << "K value too small! Minimum: 0" << std::endl;
+            std::cerr << "K value too small! Minimum: 1" << std::endl;
             exit(1);
         }
         ifstream fileone(nameone);

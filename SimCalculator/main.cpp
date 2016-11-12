@@ -70,7 +70,9 @@ int main(int argc, char *argv[]) {
         cout << endl;
     }
     else if (calname == "jaccard_hash_order") {
-
+        Jaccard_hash_order calculator(nameone, nametwo, k);
+        cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
+        cout << endl;
     }
     else if (calname == "minhash") {
 
