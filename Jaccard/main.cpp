@@ -1,58 +1,83 @@
-#include <iostream>
 #include <fstream>
-#include <vector>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h>
+#include <iostream>
 #include <set>
-#include <queue>
-using namespace std;
+#include <vector>
 
-void read(std::ifstream & in, std::string & string, int streamsize) {
-    int pos=0;
-    while(pos < streamsize){
-        in.get(string[pos]);
-        ++pos;
-    }
+void usage(const std::string &filename) {
+    std::cerr << "JACCARD usage:\n";
+    std::cerr << "\t$" << filename << " FILE_ONE FILE_TWO K\n";
+    std::cerr << "~~~~~~~~~~~~~~~~\n";
+    exit(1);
 }
 
-// Params:(name of document, queue for shingles (maybe better other structure), k)
+std::string filetostring(std::ifstream &file) {
+    std::string str;
+    str.assign( (std::istreambuf_iterator<char>(file) ),
+                (std::istreambuf_iterator<char>()    ) );
+    return str;
+}
 
+double computeJaccard(const std::string &stringone, const std::string &stringtwo, int k) {
+    int sizeone = stringone.size();
+    std::set<std::string> setone;
+    for (int i = 0; i < sizeone - k + 1; ++i) {
+        setone.insert(stringone.substr(i, k));
+    }
+    int sizetwo = stringone.size();
+    std::set<std::string> settwo;
+    for (int i = 0; i < sizetwo - k + 1; ++i) {
+        settwo.insert(stringtwo.substr(i, k));
+    }
 
-
-void file_shingling(string file, queue<string> &shingles, int k) {
-    set<string> control;
-    ifstream fIn(file, ios::in);
-    string shingle;
-    shingle.resize(k);
-    int charPos = 1;
-    while(!fIn.eof()) {
-
-        read(fIn, shingle, k);
-
-        if(control.find(shingle) == control.end()) {
-            shingles.push(shingle);
-            control.insert(shingle);
+    std::set<std::string>::const_iterator itone = setone.begin();
+    std::set<std::string>::const_iterator ittwo = settwo.begin();
+    int count_collisions = 0;
+    while (itone != setone.end() && ittwo != settwo.end()) {
+        if ((*itone) < (*ittwo)) {
+            ++itone;
         }
-        if(fIn.peek() == '\n') ++charPos;
-        if(fIn.eof()) return;
-        fIn.seekg(charPos++);
+        else if ((*itone) > (*ittwo)) {
+            ++ittwo;
+        }
+        else {
+            ++count_collisions;
+            ++itone;
+            ++ittwo;
+        }
     }
+
+    return ((double)count_collisions)/((double)(setone.size() + settwo.size() - count_collisions));
 }
 
-int main() {
-    string file1;
-    cin >> file1;
-    queue<string> shingles;
-    int k;
-    cin >> k;
-
-    file_shingling(file1, shingles, k);
-
-
-    // Solo esta para mirar que los shingles son correctos
-    while(!shingles.empty()){
-        cout << shingles.front() << endl;
-        shingles.pop();
+int main(int argc, char *argv[]) {
+    if (argc != 4) {
+        usage(std::string(argv[0]));
     }
+    std::ifstream fileone(argv[1]);
+    if (fileone.fail()) {
+        std::cerr << "Unable to open file " << argv[1] << std::endl;
+        exit(1);
+    }
+    std::ifstream filetwo(argv[2]);
+    if (filetwo.fail()) {
+        std::cerr << "Unable to open file " << argv[2] << std::endl;
+        exit(1);
+    }
+    int k = std::stoi(std::string(argv[3]));
+    if (k < 1) {
+        std::cerr << "K argument is too small! (Minimum: 1, Read: " << k << ")" << std::endl;
+        exit(1);
+    }
+
+    std::string stringone = filetostring(fileone);
+    std::string stringtwo = filetostring(filetwo);
+
+    std::cout << "ONE: " << stringone << std::endl;
+    std::cout << "TWO: " << stringtwo << std::endl;
+
+    // time start
+    double jaccard_sim = computeJaccard(stringone, stringtwo, k);
+    // time stop
+
+    std::cout << k << jaccard_sim /*<< time */<< std::endl;
 }
