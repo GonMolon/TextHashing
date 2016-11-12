@@ -27,18 +27,17 @@ int main(int argc, char *argv[]) {
     string nameone = string(argv[2]);
     string nametwo = string(argv[3]);
     int k = stoi(string(argv[4]));
-    if (calname == "all") {
-
-    } else if (calname == "jaccard_fool") {
+    bool all = calname == "all";
+    if(all || calname == "jaccard_fool") {
         Jaccard_fool calculator(nameone, nametwo, k);
         cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
         cout << endl;
-    } else if (calname == "jaccard_hash_order") {
+    }
+    if(all || calname == "jaccard_hash_order") {
 
-    } else if (calname == "minhash") {
+    }
+    if (all || calname == "minhash") {
 
-    } else {
-        usage(executable_name);
     }
 }
 
