@@ -6,7 +6,9 @@
 #include <vector>
 
 void usage(const std::string &filename) {
-    std::cerr << "usage: " << filename << " INPUT_FILE OUTPUT_FILE [-w WORDS_PER_LINE] [-s RNG_SEED]\n";
+    std::cerr << "GENERATOR usage:\n";
+    std::cerr << "\t$" << filename << " INPUT_FILE OUTPUT_FILE [-w WORDS_PER_LINE] [-s RNG_SEED]\n";
+    std::cerr << "~~~~~~~~~~~~~~~~\n";
     exit(1);
 }
 
@@ -22,7 +24,7 @@ int count_words(std::ifstream &inp) {
 }
 
 std::vector<std::string> filetovec(std::ifstream &file) {
-    std::size_t n = (std::size_t)count_words(file);
+    int n = count_words(file);
     std::vector<std::string> input_words(n);
     for (int i = 0; i < n; ++i) {
         file >> input_words[i];
@@ -33,7 +35,7 @@ std::vector<std::string> filetovec(std::ifstream &file) {
 }
 
 void vectofile(std::ofstream &file, const std::vector<std::string> &vec, int wperline) {
-    int n = (int)vec.size();
+    int n = vec.size();
     if (n > 0) {
         for (int i = 0; i < n; ++i) {
             file << vec[i];
@@ -76,7 +78,7 @@ int main(int argc, char *argv[]) {
     }
     std::ofstream out(argv[2]);
     if (out.fail()) {
-        std::cerr << "Unable to open input file " << argv[1] << std::endl;
+        std::cerr << "Unable to open input file " << argv[2] << std::endl;
         exit(1);
     }
 
