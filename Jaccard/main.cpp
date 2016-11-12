@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <set>
 #include <queue>
+#include <algorithm>
+
 using namespace std;
 
 void read(std::ifstream & in, std::string & string, int streamsize) {
@@ -20,7 +22,7 @@ void read(std::ifstream & in, std::string & string, int streamsize) {
 
 
 
-void file_shingling(string file, queue<string> &shingles, int k) {
+void file_shingling(string file, vector<string> &shingles, int k) {
     set<string> control;
     ifstream fIn(file, ios::in);
     string shingle;
@@ -31,28 +33,33 @@ void file_shingling(string file, queue<string> &shingles, int k) {
         read(fIn, shingle, k);
 
         if(control.find(shingle) == control.end()) {
-            shingles.push(shingle);
+            shingles.push_back(shingle);
             control.insert(shingle);
         }
+
         if(fIn.peek() == '\n') ++charPos;
         if(fIn.eof()) return;
         fIn.seekg(charPos++);
+
     }
 }
 
 int main() {
-    string file1;
-    cin >> file1;
-    queue<string> shingles;
+    string file1, file2;
+    cin >> file1 >> file2;
+    vector<string> shingles, shingles2;
     int k;
     cin >> k;
 
     file_shingling(file1, shingles, k);
+    file_shingling(file2, shingles2, k);
+    vector<string> common_data, union_data;
+    sort(shingles.begin(),shingles.end());
+    sort(shingles2.begin(),shingles2.end());
 
+    set_intersection(shingles.begin(), shingles.end(), shingles2.begin(), shingles2.end(), std::inserter(common_data, common_data.begin()));
 
-    // Solo esta para mirar que los shingles son correctos
-    while(!shingles.empty()){
-        cout << shingles.front() << endl;
-        shingles.pop();
-    }
+    set_union(shingles.begin(),shingles.end(),shingles2.begin(),shingles2.end(),std::inserter(union_data, union_data.begin()));
+
+    cout << "Jaccard similarity: " << float(common_data.size())/float(union_data.size())<< endl;
 }
