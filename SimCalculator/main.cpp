@@ -12,7 +12,7 @@ using namespace std;
 
 void usage(const std::string &filename) {
     std::cerr << "SimCalculator usage:\n";
-    std::cerr << "\t$" << filename << "CALCULATOR INPUT_FILE OUTPUT_FILE K\n";
+    std::cerr << "\t$" << filename << " CALCULATOR INPUT_FILE OUTPUT_FILE K\n";
     std::cerr << "~~~~~~~~~~~~~~~~\n";
     exit(1);
 }

@@ -1,11 +1,12 @@
 #include <fstream>
 #include <iostream>
 #include <set>
+#include <time.h>
 #include <vector>
 using namespace std;
 
-std::string filetostring(std::ifstream &file) {
-    std::string str;
+string filetostring(ifstream &file) {
+    string str;
     str.assign( (std::istreambuf_iterator<char>(file) ),
                 (std::istreambuf_iterator<char>()    ) );
     return str;
@@ -16,13 +17,21 @@ class Jaccard_fool {
 private:
     string str_one;
     string str_two;
+    int k;
+
     int shingles_intersection;
     int shingles_union;
-    int k;
+
+    double time;
+    ulong memory;
 
 public:
 
     Jaccard_fool(string nameone, string nametwo, int k) {
+        if (k < 1) {
+            std::cerr << "K value too small! Minimum: 0" << std::endl;
+            exit(1);
+        }
         ifstream fileone(nameone);
         if (fileone.fail()) {
             std::cerr << "Unable to open file " << nameone << std::endl;
@@ -33,11 +42,15 @@ public:
             std::cerr << "Unable to open file " << nametwo << std::endl;
             exit(1);
         }
+
         str_one = filetostring(fileone);
         str_two = filetostring(filetwo);
         this->k = k;
 
+        clock_t ini = clock();
         compute();
+        clock_t fin = clock();
+        time = double(fin - ini) / CLOCKS_PER_SEC;
 
         str_one.clear();
         str_two.clear();
@@ -73,10 +86,18 @@ public:
         }
 
         shingles_union = setone.size() + settwo.size() - shingles_intersection;
+        memory = (setone.size() + settwo.size()) * k;
     }
 
     double get_similarity() {
         return (double)shingles_union/(double)shingles_intersection;
     }
 
+    double get_memory() {
+        return memory;
+    }
+
+    double get_time() {
+        return time;
+    }
 };
