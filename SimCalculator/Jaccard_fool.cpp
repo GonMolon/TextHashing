@@ -1,16 +1,13 @@
+#ifndef A_TEXTHASHING_JACCARD_FOOL
+#define A_TEXTHASHING_JACCARD_FOOL
+
 #include <fstream>
 #include <iostream>
 #include <set>
 #include <time.h>
+#include "utilities.cpp"
 #include <vector>
 using namespace std;
-
-string filetostring(ifstream &file) {
-    string str;
-    str.assign( (std::istreambuf_iterator<char>(file) ),
-                (std::istreambuf_iterator<char>()    ) );
-    return str;
-}
 
 class Jaccard_fool {
 
@@ -90,7 +87,7 @@ public:
     }
 
     double get_similarity() {
-        return (double)shingles_union/(double)shingles_intersection;
+        return (double)shingles_intersection/(double)shingles_union;
     }
 
     double get_memory() {
@@ -101,3 +98,5 @@ public:
         return time;
     }
 };
+
+#endif

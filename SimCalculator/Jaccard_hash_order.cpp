@@ -1,7 +1,20 @@
-#include <vector>
-#include <string>
+#ifndef A_TEXTHASHING_JACCARD_HASH_ORDER
+#define A_TEXTHASHING_JACCARD_HASH_ORDER
+
 #include <algorithm>
+#include <string>
+#include "utilities.cpp"
+#include <vector>
 using namespace std;
+
+class Jaccard_hash_order {
+
+private:
+
+
+public:
+
+};
 
 float computeJaccard(vector<string>& shingles1, vector<string>& shingles2) {
     vector<int> common_data, union_data;
@@ -26,3 +39,5 @@ float computeJaccard(vector<string>& shingles1, vector<string>& shingles2) {
 
     return float(common_data.size())/float(union_data.size());
 }
+
+#endif
