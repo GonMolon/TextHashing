@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <random>
+using namespace std;
 
 typedef unsigned int uint;
 
@@ -8,6 +10,7 @@ private:
     uint a;
     uint b;
     uint p;
+    mt19937 rng;
 
     bool is_prime(uint x) {
         uint i = 3;
@@ -37,17 +40,21 @@ private:
     }
 public:
 
-    Hash(uint m, uint u) {
+    Hash(uint m, uint u, int seed) {
         this->m = m;
         p = generateNextPrime(u);
-        a = rand() % p;
+
+        mt19937 rng(seed);
+        uniform_int_distribution<uint> dist(0, p-1);
+
+        a = dist(rng);
         while(a == 0) {
-            a = rand() % p;
+            a = dist(rng);
         }
-        b = rand() % p;
+        b = dist(rng);
     }
 
-    uint calculate(uint k) {
+    uint operator()(uint k) {
         return ((a*k + b) % p) % m;
     }
 };
