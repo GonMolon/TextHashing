@@ -11,9 +11,9 @@
 using namespace std;
 
 void usage(const std::string &filename) {
-    std::cerr << "SimCalculator usage:\n";
-    std::cerr << "\t$" << filename << " CALCULATOR INPUT_FILE OUTPUT_FILE K\n";
-    std::cerr << "~~~~~~~~~~~~~~~~\n";
+    cerr << "SimCalculator usage:\n";
+    cerr << "\t$" << filename << " CALCULATOR INPUT_FILE OUTPUT_FILE K\n";
+    cerr << "~~~~~~~~~~~~~~~~\n";
     exit(1);
 }
 
@@ -52,37 +52,31 @@ vector<string> file_shingling(string file, int k) {
 }
 
 int main(int argc, char *argv[]) {
-    std::string executable_name(argv[0]);
+    string executable_name(argv[0]);
     if (argc < 5) {
         usage(executable_name);
     }
 
-    std::string option = std::string(argv[0]);
-    if (option == "all") {
+    string calname = string(argv[1]);
+    string nameone = string(argv[2]);
+    string nametwo = string(argv[3]);
+    int k = stoi(string(argv[4]));
+    if (calname == "all") {
 
     }
-    else if (option == "jaccard_fool") {
+    else if (calname == "jaccard_fool") {
+        Jaccard_fool calculator(nameone, nametwo, k);
+        cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
+        cout << endl;
+    }
+    else if (calname == "jaccard_hash_order") {
 
     }
-    else if (option == "jaccard_hash_order") {
-
-    }
-    else if (option == "minhash") {
+    else if (calname == "minhash") {
 
     }
     else {
         usage(executable_name);
     }
-
-    string file1 = argv[1];
-    string file2 = argv[2];
-    int k;
-    cin >> k;
-
-    vector<string> shingles1 = file_shingling(file1, k);
-    vector<string> shingles2 = file_shingling(file2, k);
-
-    cout << "Jaccard similarity: " << computeJaccard(shingles1, shingles2) << endl;
-    cout << "Minhash similarity: " << computeMinhash(shingles1, shingles2) << endl;
 }
 
