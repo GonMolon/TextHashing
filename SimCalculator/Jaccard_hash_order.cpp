@@ -6,8 +6,9 @@
 #include <set>
 #include <string>
 #include <time.h>
-#include "Utils.cpp"
 #include <vector>
+#include "Utils.cpp"
+
 using namespace std;
 
 class Jaccard_hash_order {

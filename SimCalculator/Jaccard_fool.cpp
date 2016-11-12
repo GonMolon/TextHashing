@@ -5,8 +5,9 @@
 #include <iostream>
 #include <set>
 #include <time.h>
-#include "Utils.cpp"
 #include <vector>
+#include "Utils.cpp"
+
 using namespace std;
 
 class Jaccard_fool {
