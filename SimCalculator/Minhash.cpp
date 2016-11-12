@@ -1,8 +1,13 @@
 #include <string>
 #include <vector>
+#include <stdlib.h>
 using namespace std;
 
-float computeMinhash(vector<string>& shingles1, vector<string>& shingles2) {
+float generateUniversalSignature(int k) {
 
+}
+
+float computeMinhash(string file1, string file2, int k, int t, int seed) {
+    srand(seed);
     return 1;
 }

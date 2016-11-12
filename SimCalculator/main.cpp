@@ -17,40 +17,6 @@ void usage(const std::string &filename) {
     exit(1);
 }
 
-void readFile(std::ifstream& in, std::string& string, int streamsize) {
-    int pos=0;
-    while(pos < streamsize){
-        in.get(string[pos]);
-        ++pos;
-    }
-}
-
-// Params:(name of document, queue for shingles (maybe better other structure), k)
-
-vector<string> file_shingling(string file, int k) {
-    vector<string> shingles;
-    set<string> control;
-    ifstream fIn(file, ios::in);
-    string shingle;
-    shingle.resize(k);
-    int charPos = 1;
-    while(!fIn.eof()) {
-
-        readFile(fIn, shingle, k);
-
-        if(control.find(shingle) == control.end()) {
-            shingles.push_back(shingle);
-            control.insert(shingle);
-        }
-
-        if(fIn.peek() == '\n') ++charPos;
-        if(fIn.eof()) return shingles;
-        fIn.seekg(charPos++);
-
-    }
-    return shingles;
-}
-
 int main(int argc, char *argv[]) {
     string executable_name(argv[0]);
     if (argc < 5) {
@@ -63,19 +29,15 @@ int main(int argc, char *argv[]) {
     int k = stoi(string(argv[4]));
     if (calname == "all") {
 
-    }
-    else if (calname == "jaccard_fool") {
+    } else if (calname == "jaccard_fool") {
         Jaccard_fool calculator(nameone, nametwo, k);
         cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
         cout << endl;
-    }
-    else if (calname == "jaccard_hash_order") {
+    } else if (calname == "jaccard_hash_order") {
 
-    }
-    else if (calname == "minhash") {
+    } else if (calname == "minhash") {
 
-    }
-    else {
+    } else {
         usage(executable_name);
     }
 }
