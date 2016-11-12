@@ -43,9 +43,9 @@ vector<string> file_shingling(string file, int k) {
     return shingles;
 }
 
-int main() {
-    string file1, file2;
-    cin >> file1 >> file2;
+int main(int argc, char *argv[]) {
+    string file1 = argv[1];
+    string file2 = argv[2];
     int k;
     cin >> k;
 
