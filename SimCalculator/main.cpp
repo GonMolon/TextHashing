@@ -33,8 +33,10 @@ int main(int argc, char *argv[]) {
         cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
         cout << endl;
     }
-    if(all || calname == "jaccard_hash_order") {
-
+    if (all || calname == "jaccard_hash_order") {
+        Jaccard_hash_order calculator(nameone, nametwo, k);
+        cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
+        cout << endl;
     }
     if (all || calname == "minhash") {
 

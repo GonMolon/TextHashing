@@ -1,43 +1,104 @@
 #ifndef A_TEXTHASHING_JACCARD_HASH_ORDER
 #define A_TEXTHASHING_JACCARD_HASH_ORDER
 
-#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <set>
 #include <string>
-#include "utilities.cpp"
+#include <time.h>
+#include "Utils.cpp"
 #include <vector>
 using namespace std;
 
 class Jaccard_hash_order {
 
 private:
+    string str_one;
+    string str_two;
+    int k;
 
+    int shingles_intersection;
+    int shingles_union;
+
+    double time;
+    ulong memory;
 
 public:
 
+    Jaccard_hash_order(string nameone, string nametwo, int k) {
+        if (k < 1) {
+            std::cerr << "K value too small! Minimum: 1" << std::endl;
+            exit(1);
+        }
+        ifstream fileone(nameone);
+        if (fileone.fail()) {
+            std::cerr << "Unable to open file " << nameone << std::endl;
+            exit(1);
+        }
+        ifstream filetwo(nametwo);
+        if (filetwo.fail()) {
+            std::cerr << "Unable to open file " << nametwo << std::endl;
+            exit(1);
+        }
+
+        str_one = filetostring(fileone);
+        str_two = filetostring(filetwo);
+        this->k = k;
+
+        clock_t ini = clock();
+        compute();
+        clock_t fin = clock();
+        time = double(fin - ini) / CLOCKS_PER_SEC;
+
+        str_one.clear();
+        str_two.clear();
+    }
+
+    void compute() {
+        hash<string> hasher;
+        int sizeone = str_one.size();
+        std::set<short> setone;
+        for (int i = 0; i < sizeone - k + 1; ++i) {
+            setone.insert((short)hasher(str_one.substr(i, k)));
+        }
+        int sizetwo = str_two.size();
+        std::set<short> settwo;
+        for (int i = 0; i < sizetwo - k + 1; ++i) {
+            settwo.insert((short)hasher(str_two.substr(i, k)));
+        }
+
+        std::set<short>::const_iterator itone = setone.begin();
+        std::set<short>::const_iterator ittwo = settwo.begin();
+        shingles_intersection = 0;
+        while (itone != setone.end() && ittwo != settwo.end()) {
+            if ((*itone) < (*ittwo)) {
+                ++itone;
+            }
+            else if ((*itone) > (*ittwo)) {
+                ++ittwo;
+            }
+            else {
+                ++shingles_intersection;
+                ++itone;
+                ++ittwo;
+            }
+        }
+
+        shingles_union = setone.size() + settwo.size() - shingles_intersection;
+        memory = (setone.size() + settwo.size()) * k;
+    }
+
+    double get_similarity() {
+        return (double)shingles_intersection/(double)shingles_union;
+    }
+
+    double get_memory() {
+        return memory;
+    }
+
+    double get_time() {
+        return time;
+    }
 };
-
-float computeJaccard(vector<string>& shingles1, vector<string>& shingles2) {
-    vector<int> common_data, union_data;
-
-    vector<int> h_shingles1(shingles1.size());
-    vector<int> h_shingles2(shingles2.size());
-    hash<string> str_hash;
-
-    for(int i = 0; i < shingles1.size(); ++i) {
-        h_shingles1[i] = str_hash(shingles1[i]);
-    }
-    for(int i = 0; i < shingles2.size(); ++i) {
-        h_shingles2[i] = str_hash(shingles2[i]);
-    }
-
-    sort(h_shingles1.begin(), h_shingles1.end());
-    sort(h_shingles2.begin(), h_shingles2.end());
-
-    set_intersection(h_shingles1.begin(), h_shingles1.end(), h_shingles2.begin(), h_shingles2.end(), std::inserter(common_data, common_data.begin()));
-
-    set_union(h_shingles1.begin(), h_shingles1.end(), h_shingles2.begin(), h_shingles2.end(), std::inserter(union_data, union_data.begin()));
-
-    return float(common_data.size())/float(union_data.size());
-}
 
 #endif
