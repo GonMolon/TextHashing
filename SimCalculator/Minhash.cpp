@@ -8,6 +8,7 @@
 using namespace std;
 
 typedef unsigned int h_type;
+typedef pair<vector<int>, vector<int> > signatures;
 
 class Hash {
 private:
@@ -61,7 +62,7 @@ public:
         b = dist(rng);
     }
 
-    h_type operator()(h_type k) {
+    h_type operator()(h_type k) const {
         return (h_type) (((a*k + b) % p) % m);
     }
 };
@@ -75,7 +76,7 @@ typedef map<short, status> union_set;
 void fill(union_set& m, const string& s, int k, status st) {
     hash<string> hashFunction;
     string shingle(k, ' ');
-    for(int i = 0; i < s.size()-k; ++i) {
+    for(int i = 0; i <= s.size()-k; ++i) {
         for(int j = 0; j < k; ++j) {
             shingle[j] = s[i+j];
         }
@@ -84,10 +85,6 @@ void fill(union_set& m, const string& s, int k, status st) {
             result.first->second = BOTH;
         }
     }
-}
-
-float generateUniversalSignature(int k) {
-
 }
 
 vector<Hash> generateHashes(int t, int size, int seed) {
@@ -100,10 +97,48 @@ vector<Hash> generateHashes(int t, int size, int seed) {
     return hashes;
 }
 
+signatures generateSignatures(const union_set& m, const vector<Hash>& hashes) {
+    signatures sigs(vector<int>(hashes.size(), -1), vector<int>(hashes.size(), -1));
+    int r = 0;
+    union_set::const_iterator i = m.begin();
+    while(i != m.end()) {
+        status st = i->second;
+        for(int h = 0; h < hashes.size(); ++h) {
+            int p = hashes[h](r);
+            if(st == BOTH || st == FIRST) {
+                if(sigs.first[h] == -1 || p < sigs.first[h]) {
+                    sigs.first[h] = p;
+                }
+            }
+            if(st == BOTH || st == SECOND) {
+                if(sigs.second[h] == -1 || p < sigs.second[h]) {
+                    sigs.second[h] = p;
+                }
+            }
+        }
+        ++r;
+        ++i;
+    }
+    return sigs;
+};
+
+float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
+    int k = 0;
+    int t = 0;
+    for(int i = 0; i < sig1.size(); ++i) {
+        if(sig1[i] == sig2[i]) {
+            ++k;
+        }
+        ++t;
+    }
+    return ((float)k)/t;
+}
+
 float computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
     union_set m;
     fill(m, file1, k, FIRST);
     fill(m, file2, k, SECOND);
     vector<Hash> hashes = generateHashes(t, m.size(), seed);
-    return 1;
+    signatures sigs = generateSignatures(m, hashes);
+    return computeSim(sigs.first, sigs.second);
 }

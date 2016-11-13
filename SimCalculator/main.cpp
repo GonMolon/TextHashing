@@ -12,14 +12,14 @@ using namespace std;
 
 void usage(const std::string &filename) {
     cerr << "SimCalculator usage:\n";
-    cerr << "\t$" << filename << " CALCULATOR INPUT_FILE OUTPUT_FILE K\n";
+    cerr << "\t$" << filename << " CALCULATOR INPUT_FILE OUTPUT_FILE k t seed\n";
     cerr << "~~~~~~~~~~~~~~~~\n";
     exit(1);
 }
 
 int main(int argc, char *argv[]) {
     string executable_name(argv[0]);
-    if (argc < 5) {
+    if (argc != 7) {
         usage(executable_name);
     }
 
@@ -27,6 +27,8 @@ int main(int argc, char *argv[]) {
     string nameone = string(argv[2]);
     string nametwo = string(argv[3]);
     int k = stoi(string(argv[4]));
+    int t = stoi(string(argv[5]));
+    int seed = stoi(string(argv[6]));
     bool all = calname == "all";
     if(all || calname == "jaccard_fool") {
         Jaccard_fool calculator(nameone, nametwo, k);
@@ -39,7 +41,7 @@ int main(int argc, char *argv[]) {
         cout << endl;
     }
     if (all || calname == "minhash") {
-
+        cout << "Minhash signature sim: " << computeMinhash("laho", "hola", k, t, seed);
     }
 }
 
