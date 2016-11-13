@@ -15,7 +15,7 @@ private:
     h_type m;
     h_type a;
     h_type b;
-    long p;
+    h_type p;
 
     bool is_prime(h_type x) {
         h_type i = 3;
@@ -80,7 +80,7 @@ void fill(union_set& m, const string& s, int k, status st) {
         for(int j = 0; j < k; ++j) {
             shingle[j] = s[i+j];
         }
-        pair<union_set::iterator , bool> result = m.insert(pair<short, status>((short)hashFunction(shingle), st));
+        pair<union_set::iterator, bool> result = m.insert(pair<short, status>((short)hashFunction(shingle), st));
         if(!result.second) {
             result.first->second = BOTH;
         }

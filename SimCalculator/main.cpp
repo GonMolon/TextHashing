@@ -49,18 +49,24 @@ int main(int argc, char *argv[]) {
     string s1 = filetostring(file1);
     string s2 = filetostring(file2);
 
+    clock_t ini;
+
     if(all || calname == "jaccard_fool") {
+        ini = clock();
         Jaccard_fool calculator(s1, s2, k);
-        cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
-        cout << endl;
+        cout << "Jaccard normal: " << calculator.get_similarity() << endl;
+        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
     if (all || calname == "jaccard_hash_order") {
+        ini = clock();
         Jaccard_hash_order calculator(s1, s2, k);
-        cout << k << "\t" << calculator.get_time() << "\t" << calculator.get_similarity();
-        cout << endl;
+        cout << "Jaccard with hashing: " << calculator.get_similarity() << endl;
+        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
     if (all || calname == "minhash") {
-        cout << "Minhash signature sim: " << computeMinhash(s1, s2, k, t, seed);
+        ini = clock();
+        cout << "Minhash signature: " << computeMinhash(s1, s2, k, t, seed) << endl;
+        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
 }
 

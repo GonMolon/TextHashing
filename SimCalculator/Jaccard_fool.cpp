@@ -20,7 +20,6 @@ private:
     int shingles_intersection;
     int shingles_union;
 
-    double time;
     ulong memory;
 
 public:
@@ -30,10 +29,7 @@ public:
         this->str_two = s2;
         this->k = k;
 
-        clock_t ini = clock();
         compute();
-        clock_t fin = clock();
-        time = double(fin - ini) / CLOCKS_PER_SEC;
 
         str_one.clear();
         str_two.clear();
@@ -78,10 +74,6 @@ public:
 
     double get_memory() {
         return memory;
-    }
-
-    double get_time() {
-        return time;
     }
 };
 
