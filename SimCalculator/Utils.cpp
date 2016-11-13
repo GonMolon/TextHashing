@@ -2,6 +2,8 @@
 #define A_TEXTHASHING_UTILITIES_lU5rGpijs5
 
 #include <fstream>
+#include <iostream>
+
 using namespace std;
 
 namespace utils {
@@ -27,6 +29,22 @@ namespace utils {
         }
         return powa % mod;
     }
+}
+
+std::ostream& bold_on(std::ostream& os) {
+    return os << "\e[1m";
+}
+
+std::ostream& bold_off(std::ostream& os) {
+    return os << "\e[0m";
+}
+
+std::ostream& uline_on(std::ostream& os) {
+    return os << "\e[4m";
+}
+
+std::ostream& uline_off(std::ostream& os) {
+    return os << "\e[0m";
 }
 
 #endif
