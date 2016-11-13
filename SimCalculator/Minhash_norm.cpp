@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <random>
 #include <limits.h>
-#include <unordered_map>
+#include <unordered_set>
 #include "Utils.cpp"
 using namespace std;
 
@@ -89,15 +89,18 @@ signature generateSignature(int k, const string& file, const vector<Hash>& hashe
     signature s(hashes.size(), -1);
     hash<string> hashFunction;
     string shingle(k, ' ');
+    unordered_set<int> filter;
     for(int i = 0; i <= file.size()-k; ++i) {
         for(int j = 0; j < k; ++j) {
             shingle[j] = file[i+j];
         }
         int value = hashFunction(shingle);
-        for(int h = 0; h < hashes.size(); ++h) {
-            int p = hashes[h](value);
-            if(s[h] == -1 || p < s[h]) {
-                s[h] = p;
+        if(filter.insert(value).second) {
+            for(int h = 0; h < hashes.size(); ++h) {
+                int p = hashes[h](value);
+                if(s[h] == -1 || p < s[h]) {
+                    s[h] = p;
+                }
             }
         }
     }
