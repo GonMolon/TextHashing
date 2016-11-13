@@ -67,12 +67,6 @@ public:
     h_type operator()(h_type k) const {
         return (h_type) (((a*k + b) % p) % m);
     }
-
-    void print() {
-        cout << "a = " << a << endl;
-        cout << "b = " << b << endl;
-        cout << "p = " << p << endl;
-    }
 };
 
 vector<Hash> generateHashes(int t, int seed) {
