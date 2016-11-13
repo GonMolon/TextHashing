@@ -1,12 +1,14 @@
 #ifndef A_TEXTHASHING_JACCARD_HASH_ROLL
 #define A_TEXTHASHING_JACCARD_HASH_ROLL
 
+//#include <bitset>
 #include <fstream>
 #include <iostream>
 #include <set>
 #include <string>
 #include <time.h>
 #include <vector>
+
 #include "Utils.cpp"
 #include "RollingHasher.cpp"
 
@@ -38,23 +40,28 @@ public:
     }
 
     void compute() {
-        RollingHasher hasher((uint)257, str_one.substr(0, k));
+        RollingHasher hasher(257, str_one.substr(0, k));
         int sizeone = str_one.size();
         std::set<uint> setone;
         setone.insert(hasher.gethash());
+        //cout << str_one.substr(0, k) << ": " << bitset<64>(hasher.gethash()) << endl;
         for (int i = k; i < sizeone; ++i) {
             hasher.roll(str_one[i]);
             setone.insert(hasher.gethash());
-            cout << str_one.substr(i-k, k) << " " << hasher.gethash() << endl;
+            //cout << str_one.substr(i-k+1, k) << ": " << bitset<64>(hasher.gethash()) << endl;
         }
+
+        //cout << "################" << endl;
 
         hasher.setbase(str_two.substr(0, k));
         int sizetwo = str_two.size();
         std::set<uint> settwo;
         settwo.insert(hasher.gethash());
+        //cout << str_two.substr(0, k) << ": " << bitset<64>(hasher.gethash()) << endl;
         for (int i = k; i < sizetwo; ++i) {
             hasher.roll(str_two[i]);
             settwo.insert(hasher.gethash());
+            //cout << str_two.substr(i-k+1, k) << ": " << bitset<64>(hasher.gethash()) << endl;
         }
 
         std::set<uint>::const_iterator itone = setone.begin();
