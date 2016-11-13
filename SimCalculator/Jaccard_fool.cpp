@@ -40,8 +40,8 @@ public:
             exit(1);
         }
 
-        str_one = filetostring(fileone);
-        str_two = filetostring(filetwo);
+        str_one = utils::file_to_string(fileone);
+        str_two = utils::file_to_string(filetwo);
         this->k = k;
 
         clock_t ini = clock();

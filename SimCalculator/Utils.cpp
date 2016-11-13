@@ -7,11 +7,59 @@ using namespace std;
 
 typedef unsigned int uint;
 
-string filetostring(ifstream &file) {
-    string str;
-    str.assign( (std::istreambuf_iterator<char>(file) ),
-                (std::istreambuf_iterator<char>()    ) );
-    return str;
+namespace utils {
+
+    string file_to_string(ifstream &file) {
+        string str;
+        str.assign((std::istreambuf_iterator<char>(file)),
+                   (std::istreambuf_iterator<char>()));
+        return str;
+    }
+
+    uint pow_mod(uint a, uint b, uint mod) {
+        if (b == 0) {
+            return 1;
+        }
+        if (b == 1) {
+            return a % mod;
+        }
+        uint powa = pow_mod(a, b/2, mod);
+        powa = powa*powa;
+        if (b & 1) {
+            powa = powa*a;
+        }
+        return powa % mod;
+    }
+
+    bool is_prime(uint x) {
+        uint i = 3;
+        uint maxi = (uint)ceil(sqrt(x) + 1);
+        while(i < maxi) {
+            uint q = x/i;
+            if(q < i) {
+                return true;
+            }
+            if(x == q * i) {
+                return false;
+            }
+            i += 2;
+        }
+        return false;
+    }
+
+    uint get_next_prime(uint n) {
+        ++n;
+        if(n <= 2) {
+            return 2;
+        }
+        if(!(n & 1)) {
+            ++n;
+        }
+        while(!is_prime(n)) {
+            n += 2;
+        }
+        return n;
+    }
 }
 
 
@@ -45,7 +93,7 @@ private:
             ++n;
         }
         while(!is_prime(n)) {
-            n += n;
+            n += 2;
         }
         return n;
     }
