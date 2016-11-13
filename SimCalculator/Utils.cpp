@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_UTILITIES
-#define A_TEXTHASHING_UTILITIES
+#ifndef A_TEXTHASHING_UTILITIES_lU5rGpijs5
+#define A_TEXTHASHING_UTILITIES_lU5rGpijs5
 
 #include <fstream>
 using namespace std;

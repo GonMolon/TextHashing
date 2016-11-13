@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_JACCARD_HASH_ROLL
-#define A_TEXTHASHING_JACCARD_HASH_ROLL
+#ifndef A_TEXTHASHING_JACCARD_HASH_ROLL_lU5rGpijs5
+#define A_TEXTHASHING_JACCARD_HASH_ROLL_lU5rGpijs5
 
 //#include <bitset>
 #include <fstream>

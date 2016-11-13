@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_MINHASH_NORM
-#define A_TEXTHASHING_MINHASH_NORM
+#ifndef A_TEXTHASHING_MINHASH_NORM_lU5rGpijs5
+#define A_TEXTHASHING_MINHASH_NORM_lU5rGpijs5
 
 #include <string>
 #include <vector>

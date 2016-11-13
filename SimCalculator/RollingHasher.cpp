@@ -1,5 +1,5 @@
-#ifndef A_ROLLINGHASHER
-#define A_ROLLINGHASHER
+#ifndef A_ROLLINGHASHER_lU5rGpijs5
+#define A_ROLLINGHASHER_lU5rGpijs5
 
 //#include <bitset>
 #include <string>
@@ -48,4 +48,5 @@ public:
     }
 
 };
+
 #endif

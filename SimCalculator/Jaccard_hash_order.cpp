@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_JACCARD_HASH_ORDER
-#define A_TEXTHASHING_JACCARD_HASH_ORDER
+#ifndef A_TEXTHASHING_JACCARD_HASH_ORDER_lU5rGpijs5
+#define A_TEXTHASHING_JACCARD_HASH_ORDER_lU5rGpijs5
 
 #include <fstream>
 #include <iostream>

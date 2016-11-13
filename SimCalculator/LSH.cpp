@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_LSH
-#define A_TEXTHASHING_LSH
+#ifndef A_TEXTHASHING_LSH_lU5rGpijs5
+#define A_TEXTHASHING_LSH_lU5rGpijs5
 
 #include <vector>
 #include <string>
@@ -14,4 +14,5 @@ double computeLSH(const vector<string>& names, const vector<string*>& files, int
     }
     return 1;
 }
+
 #endif

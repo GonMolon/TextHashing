@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_JACCARD_FOOL
-#define A_TEXTHASHING_JACCARD_FOOL
+#ifndef A_TEXTHASHING_JACCARD_FOOL_lU5rGpijs5
+#define A_TEXTHASHING_JACCARD_FOOL_lU5rGpijs5
 
 #include <fstream>
 #include <iostream>

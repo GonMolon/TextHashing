@@ -4,6 +4,7 @@
 #include <set>
 #include <queue>
 #include <algorithm>
+
 #include "Jaccard_fool.cpp"
 #include "Jaccard_hash_order.cpp"
 #include "Jaccard_hash_roll.cpp"
