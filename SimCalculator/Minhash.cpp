@@ -8,11 +8,11 @@
 #include <limits.h>
 #include <unordered_set>
 #include "Utils.cpp"
+#include "RollingHasher.cpp"
 using namespace std;
 
 typedef unsigned int h_type;
 typedef vector<int> signature;
-typedef pair<signature, signature> signatures;
 
 class Hash {
 private:
@@ -85,24 +85,37 @@ vector<Hash> generateHashes(int t, int seed) {
     return hashes;
 }
 
-signature generateSignature(int k, const string& file, const vector<Hash>& hashes) {
-    signature s(hashes.size(), -1);
-    hash<string> hashFunction;
-    string shingle(k, ' ');
-    unordered_set<int> filter;
-    for(int i = 0; i <= file.size()-k; ++i) {
-        for(int j = 0; j < k; ++j) {
-            shingle[j] = file[i+j];
-        }
-        int value = hashFunction(shingle);
-        if(filter.insert(value).second) {
-            for(int h = 0; h < hashes.size(); ++h) {
-                int p = hashes[h](value);
-                if(s[h] == -1 || p < s[h]) {
-                    s[h] = p;
-                }
+void insertValue(int value, signature& s, unordered_set<int>& filter, const vector<Hash>& hashes) {
+    if(filter.insert(value).second) {
+        for(int h = 0; h < hashes.size(); ++h) {
+            int p = hashes[h](value);
+            if(s[h] == -1 || p < s[h]) {
+                s[h] = p;
             }
         }
+    }
+}
+
+signature generateSignature(int k, const string& file, const vector<Hash>& hashes, bool rollingHash) {
+    signature s(hashes.size(), -1);
+    unordered_set<int> filter;
+    if(!rollingHash) {
+        hash<string> hashFunction;
+        string shingle(k, ' ');
+        for(int i = 0; i <= file.size()-k; ++i) {
+            for(int j = 0; j < k; ++j) {
+                shingle[j] = file[i+j];
+            }
+            insertValue(hashFunction(shingle), s, filter, hashes);
+        }
+    } else if(k <= file.size()) {
+        string shingle = file.substr(0, k);
+        RollingHasher hasher(257, shingle);
+        for(int i = k; i < file.size(); ++i) {
+            insertValue(hasher.gethash(), s, filter, hashes);
+            hasher.roll(file[i]);
+        }
+        insertValue(hasher.gethash(), s, filter, hashes);
     }
     return s;
 }
@@ -114,13 +127,13 @@ double computeSim(const vector<int>& sig1, const vector<int>& sig2) {
             ++j;
         }
     }
-    return ((double)j)/(sig1.size());
+    return double(j)/double(sig1.size());
 }
 
-double computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
+double computeMinhash(const string& file1, const string& file2, int k, int t, int seed, bool rollingHash) {
     vector<Hash> hashes = generateHashes(t, seed);
-    signature s1 = generateSignature(k, file1, hashes);
-    signature s2 = generateSignature(k, file2, hashes);
+    signature s1 = generateSignature(k, file1, hashes, rollingHash);
+    signature s2 = generateSignature(k, file2, hashes, rollingHash);
     return computeSim(s1, s2);
 }
 

@@ -7,7 +7,7 @@
 #include "Jaccard_fool.cpp"
 #include "Jaccard_hash_order.cpp"
 #include "Jaccard_hash_roll.cpp"
-#include "Minhash_norm.cpp"
+#include "Minhash.cpp"
 #include "LSH.cpp"
 
 using namespace std;
@@ -50,8 +50,11 @@ int main(int argc, char *argv[]) {
 
     string s1 = utils::file_to_string(file1);
     string s2 = utils::file_to_string(file2);
-//    string s1 = "asasasasasasasasasasasasa";
-//    string s2 = "asasasasasasasasasasasasa";
+
+    if(s1.size() < k || s2.size() < k) {
+        cout << "k cannot be greater than the size of any document" << endl;
+        exit(1);
+    }
 
     clock_t ini;
 
@@ -75,7 +78,12 @@ int main(int argc, char *argv[]) {
     }
     if (all || calname == "minhash") {
         ini = clock();
-        cout << "Minhash signature: " << computeMinhash(s1, s2, k, t, seed) << endl;
+        cout << "Minhash signature: " << computeMinhash(s1, s2, k, t, seed, false) << endl;
+        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
+    }
+    if (all || calname == "minhash_roll") {
+        ini = clock();
+        cout << "Minhash signature (with rollinghash): " << computeMinhash(s1, s2, k, t, seed, true) << endl;
         cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
     if(all || calname == "lsh") {
