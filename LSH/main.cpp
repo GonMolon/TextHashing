@@ -1,9 +1,6 @@
-#ifndef A_TEXTHASHING_LSH
-#define A_TEXTHASHING_LSH
-
 #include <vector>
 #include <string>
-#include "Minhash.cpp"
+#include "../SimCalculator/Minhash.cpp"
 using namespace std;
 
 double computeLSH(const vector<string>& names, const vector<string*>& files, int k, int t, int seed) {
@@ -14,4 +11,3 @@ double computeLSH(const vector<string>& names, const vector<string*>& files, int
     }
     return 1;
 }
-#endif

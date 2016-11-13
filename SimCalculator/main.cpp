@@ -8,7 +8,6 @@
 #include "Jaccard_hash_order.cpp"
 #include "Jaccard_hash_roll.cpp"
 #include "Minhash.cpp"
-#include "LSH.cpp"
 
 using namespace std;
 
@@ -84,18 +83,6 @@ int main(int argc, char *argv[]) {
     if (all || calname == "minhash_roll") {
         ini = clock();
         cout << "Minhash signature (with rollinghash): " << computeMinhash(s1, s2, k, t, seed, true) << endl;
-        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
-    }
-    if(all || calname == "lsh") {
-        ini = clock();
-        vector<string> names;
-        vector<string*> files;
-        names.push_back(nameone);
-        names.push_back(nametwo);
-        files.push_back(&s1);
-        files.push_back(&s2);
-        cout << "LSH sim pairs: ";
-        //vector<pair<pair<string, string>, double> > result = computeLSH(names, files, k, t, seed);
         cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
 }
