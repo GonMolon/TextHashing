@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <random>
 #include <limits.h>
-#include <map>
+#include <unordered_map>
 #include "Utils.cpp"
 using namespace std;
 
@@ -39,7 +39,7 @@ private:
             ++n;
         }
         while(!is_prime(n)) {
-            n += n;
+            n += 2;
         }
         return n;
     }
@@ -53,17 +53,26 @@ public:
         p = generateNextPrime(u);
 
         mt19937 rng(seed);
-        uniform_int_distribution<h_type> dist(0, p-1);
+        uniform_int_distribution<h_type> distA(1, p-1);
+        uniform_int_distribution<h_type> distB(0, p-1);
 
-        a = dist(rng);
-        while(a == 0) {
-            a = dist(rng);
-        }
-        b = dist(rng);
+        a = distA(rng);
+        b = distB(rng);
     }
 
     h_type operator()(h_type k) const {
         return (h_type) (((a*k + b) % p) % m);
+    }
+
+    void print() {
+        for(int i = 0; i < m; ++i) {
+            cout << (*this)(i) << " ";
+        }
+        cout << endl;
+        /*
+        cout << "a = " << a << endl;
+        cout << "b = " << b << endl;
+        cout << "p = " << p << endl;*/
     }
 };
 
@@ -71,7 +80,7 @@ enum status {
     FIRST, SECOND, BOTH
 };
 
-typedef map<short, status> union_set;
+typedef unordered_map<short, status> union_set;
 
 void fill(union_set& m, const string& s, int k, status st) {
     hash<string> hashFunction;
@@ -123,18 +132,17 @@ signatures generateSignatures(const union_set& m, const vector<Hash>& hashes) {
 };
 
 float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
-    int k = 0;
-    int t = 0;
+    int j = 0;
     for(int i = 0; i < sig1.size(); ++i) {
         if(sig1[i] == sig2[i]) {
-            ++k;
+            ++j;
         }
-        ++t;
     }
-    return ((float)k)/t;
+    return ((float)j)/(sig1.size());
 }
 
 float computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
+    srand(seed);
     union_set m;
     fill(m, file1, k, FIRST);
     fill(m, file2, k, SECOND);

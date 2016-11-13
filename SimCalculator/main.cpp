@@ -47,8 +47,10 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    string s1 = utils::file_to_string(file1);
-    string s2 = utils::file_to_string(file2);
+    //string s1 = filetostring(file1);
+    //string s2 = filetostring(file2);
+    string s1 = "hellowqeflihewlfasdlfkjasdf";
+    string s2 = "hellouuuuu";
 
     clock_t ini;
 
