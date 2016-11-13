@@ -1,3 +1,6 @@
+#ifndef A_TEXTHASHING_MINHASH_NORM
+#define A_TEXTHASHING_MINHASH_NORM
+
 #include <string>
 #include <vector>
 #include <stdlib.h>
@@ -101,19 +104,21 @@ signature generateSignature(int k, const string& file, const vector<Hash>& hashe
     return s;
 }
 
-float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
+double computeSim(const vector<int>& sig1, const vector<int>& sig2) {
     int j = 0;
     for(int i = 0; i < sig1.size(); ++i) {
         if(sig1[i] == sig2[i]) {
             ++j;
         }
     }
-    return ((float)j)/(sig1.size());
+    return ((double)j)/(sig1.size());
 }
 
-float computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
+double computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
     vector<Hash> hashes = generateHashes(t, seed);
     signature s1 = generateSignature(k, file1, hashes);
     signature s2 = generateSignature(k, file2, hashes);
     return computeSim(s1, s2);
 }
+
+#endif
