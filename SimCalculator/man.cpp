@@ -47,7 +47,7 @@ void man() {
     cout << endl;
     cout << "            " << "--k=POSITIVE_INTEGER as shingle size"<< endl;
     cout << endl;
-    cout << "            " << "--t=POSITIVE_INTEGER as number of hash functions used"<< endl;
+    cout << "            " << "--t=POSITIVE_INTEGER" << bold_on << " (obligatory) " << bold_off << "as number of hash functions used" << endl;
     cout << endl;
     cout << "            " << "--seed=INTEGER as random generator seed"<< endl;
     cout << endl;
@@ -57,7 +57,7 @@ void man() {
     cout << endl;
     cout << "            " << "--k=POSITIVE_INTEGER as shingle size"<< endl;
     cout << endl;
-    cout << "            " << "--t=POSITIVE_INTEGER as number of hash functions used"<< endl;
+    cout << "            " << "--t=POSITIVE_INTEGER" << bold_on << " (obligatory) " << bold_off << "as number of hash functions used" << endl;
     cout << endl;
     cout << "            " << "--seed=INTEGER as random generator seed"<< endl;
     cout << endl;
@@ -68,7 +68,7 @@ void man() {
     cout << "        " << "larity between the documents."<< endl;
     cout << endl;
     cout << "    " << bold_on << "--t=POSITIVE_INTEGER" << bold_off << endl;
-    cout << "        " << "Defaults to t=5. Indicates the number of hash functions used in minhash modes."<< endl;
+    cout << "        " << "Indicates the number of hash functions used in minhash modes."<< endl;
     cout << endl;
     cout << "    " << bold_on << "--seed=INTEGER" << bold_off << endl;
     cout << "        " << "Defaults to a random value. Used by minhash modes in their random generator number."<< endl;

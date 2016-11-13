@@ -9,9 +9,8 @@
 #include "Jaccard_fool.cpp"
 #include "Jaccard_hash_order.cpp"
 #include "Jaccard_hash_roll.cpp"
-#include "LSH.cpp"
 #include "man.cpp"
-#include "Minhash_norm.cpp"
+#include "Minhash.cpp"
 
 using namespace std;
 
@@ -50,7 +49,7 @@ int main(int argc, char *argv[]) {
     bool e;
     seed = random_device()();
     k = 9;
-    t = 5;
+    t = -1;
     e = false;
 
     // FILE_ONE FILE_TWO MODE
@@ -99,13 +98,13 @@ int main(int argc, char *argv[]) {
         std::cerr << "K value too small! Minimum: 1" << std::endl;
         exit(1);
     }
-    if (t < 1) {
-        std::cerr << "T value too small! Minimum: 1" << std::endl;
-        exit(1);
-    }
 
     string s1 = utils::file_to_string(file1);
     string s2 = utils::file_to_string(file2);
+    if(s1.size() < k || s2.size() < k) {
+        cout << "k cannot be greater than the size of any document" << endl;
+        exit(1);
+    }
 
     clock_t ini;
 
@@ -137,32 +136,29 @@ int main(int argc, char *argv[]) {
         results.push_back(tuple<string, double, double>("jaccard_roll", similarity, time));
     }
     if (all || calname == "minhash") {
+        if (t < 1) {
+            cerr << endl;
+            cerr << "You must provide a parameter --t=POSITIVE_INTEGER parameter for minhash modes!" << endl << endl;
+            exit(1);
+        }
         mode_found = true;
         ini = clock();
-        similarity = computeMinhash(s1, s2, k, t, seed);
+        similarity = computeMinhash(s1, s2, k, t, seed, false);
         time = double(clock()-ini)/CLOCKS_PER_SEC;
         results.push_back(tuple<string, double, double>("minhash", similarity, time));
     }
     if (all || calname == "minhash_roll") {
+        if (t < 1) {
+            cerr << endl;
+            cerr << "You must provide a parameter --t=POSITIVE_INTEGER parameter for minhash modes!" << endl << endl;
+            exit(1);
+        }
         mode_found = true;
         ini = clock();
-        similarity = computeMinhash(s1, s2, k, t, seed);
+        similarity = computeMinhash(s1, s2, k, t, seed, true);
         time = double(clock()-ini)/CLOCKS_PER_SEC;
         results.push_back(tuple<string, double, double>("minhash_roll", similarity, time));
     }
-//    if(all || calname == "lsh") {
-//        mode_found = true;
-//        ini = clock();
-//        vector<string> names;
-//        vector<string*> files;
-//        names.push_back(nameone);
-//        names.push_back(nametwo);
-//        files.push_back(&s1);
-//        files.push_back(&s2);
-//        cout << "LSH sim pairs: ";
-//        vector<pair<pair<string, string>, double> > result = computeLSH(names, files, k, t, seed);
-//        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
-//    }
 
     if (!mode_found) {
         usage();
