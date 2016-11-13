@@ -8,19 +8,20 @@
 using namespace std;
 
 typedef unsigned int h_type;
-typedef pair<vector<int>, vector<int> > signatures;
+typedef vector<int> signature;
+typedef pair<signature, signature> signatures;
 
 class Hash {
 private:
     h_type m;
-    h_type a;
-    h_type b;
-    h_type p;
+    long a;
+    long b;
+    long p;
 
-    bool is_prime(h_type x) {
-        h_type i = 3;
+    bool is_prime(long x) {
+        long i = 3;
         while(true) {
-            h_type q = x/i;
+            long q = x/i;
             if(q < i) {
                 return true;
             }
@@ -31,7 +32,7 @@ private:
         }
     }
 
-    h_type generateNextPrime(h_type n) {
+    long generateNextPrime(long n) {
         if(n <= 2) {
             return 2;
         }
@@ -63,64 +64,42 @@ public:
     h_type operator()(h_type k) const {
         return (h_type) (((a*k + b) % p) % m);
     }
-};
 
-enum status {
-    FIRST, SECOND, BOTH
-};
-
-typedef unordered_map<char, status> union_set;
-
-void fill(union_set& m, const string& s, int k, status st) {
-    hash<string> hashFunction;
-    string shingle(k, ' ');
-    for(int i = 0; i <= s.size()-k; ++i) {
-        for(int j = 0; j < k; ++j) {
-            shingle[j] = s[i+j];
-        }
-        pair<union_set::iterator, bool> result = m.insert(pair<h_type, status>(hashFunction(shingle), st));
-        if(!result.second) {
-            if(result.first->second != st) {
-                result.first->second = BOTH;
-            }
-        }
+    void print() {
+        cout << "a = " << a << endl;
+        cout << "b = " << b << endl;
+        cout << "p = " << p << endl;
     }
-}
+};
 
-vector<Hash> generateHashes(int t, int size, int seed) {
+vector<Hash> generateHashes(int t, int seed) {
     mt19937 rng(seed);
     uniform_int_distribution<int> dist(0, INT_MAX);
     vector<Hash> hashes(t);
     for(int i = 0; i < t; ++i) {
-        hashes[i] = Hash(size, size, ((int)dist(rng)));
+        hashes[i] = Hash(INT_MAX, INT_MAX, ((int)dist(rng)));
     }
     return hashes;
 }
 
-signatures generateSignatures(const union_set& m, const vector<Hash>& hashes) {
-    signatures sigs(vector<int>(hashes.size(), -1), vector<int>(hashes.size(), -1));
-    int r = 0;
-    union_set::const_iterator i = m.begin();
-    while(i != m.end()) {
-        status st = i->second;
+signature generateSignature(int k, const string& file, const vector<Hash>& hashes) {
+    signature s(hashes.size(), -1);
+    hash<string> hashFunction;
+    string shingle(k, ' ');
+    for(int i = 0; i <= file.size()-k; ++i) {
+        for(int j = 0; j < k; ++j) {
+            shingle[j] = file[i+j];
+        }
+        int value = hashFunction(shingle);
         for(int h = 0; h < hashes.size(); ++h) {
-            int p = hashes[h](r);
-            if(st == BOTH || st == FIRST) {
-                if(sigs.first[h] == -1 || p < sigs.first[h]) {
-                    sigs.first[h] = p;
-                }
-            }
-            if(st == BOTH || st == SECOND) {
-                if(sigs.second[h] == -1 || p < sigs.second[h]) {
-                    sigs.second[h] = p;
-                }
+            int p = hashes[h](value);
+            if(s[h] == -1 || p < s[h]) {
+                s[h] = p;
             }
         }
-        ++r;
-        ++i;
     }
-    return sigs;
-};
+    return s;
+}
 
 float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
     int j = 0;
@@ -133,10 +112,8 @@ float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
 }
 
 float computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
-    union_set m;
-    fill(m, file1, k, FIRST);
-    fill(m, file2, k, SECOND);
-    vector<Hash> hashes = generateHashes(t, m.size(), seed);
-    signatures sigs = generateSignatures(m, hashes);
-    return computeSim(sigs.first, sigs.second);
+    vector<Hash> hashes = generateHashes(t, seed);
+    signature s1 = generateSignature(k, file1, hashes);
+    signature s2 = generateSignature(k, file2, hashes);
+    return computeSim(s1, s2);
 }
