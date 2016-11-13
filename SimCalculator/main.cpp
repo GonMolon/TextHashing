@@ -4,8 +4,9 @@
 #include <set>
 #include <queue>
 #include <algorithm>
-#include "Jaccard_hash_order.cpp"
 #include "Jaccard_fool.cpp"
+#include "Jaccard_hash_order.cpp"
+#include "Jaccard_hash_roll.cpp"
 #include "Minhash.cpp"
 
 using namespace std;
@@ -63,6 +64,12 @@ int main(int argc, char *argv[]) {
         ini = clock();
         Jaccard_hash_order calculator(s1, s2, k);
         cout << "Jaccard with hashing: " << calculator.get_similarity() << endl;
+        cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
+    }
+    if (all || calname == "jaccard_hash_roll") {
+        ini = clock();
+        Jaccard_hash_roll calculator(s1, s2, k);
+        cout << "Jaccard with rolling hashing: " << calculator.get_similarity() << endl;
         cout << "Exec time: " << double(clock()-ini)/CLOCKS_PER_SEC << endl;
     }
     if (all || calname == "minhash") {

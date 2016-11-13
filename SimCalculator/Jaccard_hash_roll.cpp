@@ -1,5 +1,5 @@
-#ifndef A_TEXTHASHING_JACCARD_HASH_ORDER
-#define A_TEXTHASHING_JACCARD_HASH_ORDER
+#ifndef A_TEXTHASHING_JACCARD_HASH_ROLL
+#define A_TEXTHASHING_JACCARD_HASH_ROLL
 
 #include <fstream>
 #include <iostream>
@@ -8,10 +8,11 @@
 #include <time.h>
 #include <vector>
 #include "Utils.cpp"
+#include "RollingHasher.cpp"
 
 using namespace std;
 
-class Jaccard_hash_order {
+class Jaccard_hash_roll {
 
 private:
     string str_one;
@@ -25,7 +26,7 @@ private:
 
 public:
 
-    Jaccard_hash_order(string s1, string s2, int k) {
+    Jaccard_hash_roll(string s1, string s2, int k) {
         this->str_one = s1;
         this->str_two = s2;
         this->k = k;
@@ -37,16 +38,23 @@ public:
     }
 
     void compute() {
-        hash<string> hasher;
+        RollingHasher hasher((uint)257, str_one.substr(0, k));
         int sizeone = str_one.size();
         std::set<uint> setone;
-        for (int i = 0; i < sizeone - k + 1; ++i) {
-            setone.insert((uint)hasher(str_one.substr(i, k)));
+        setone.insert(hasher.gethash());
+        for (int i = k; i < sizeone; ++i) {
+            hasher.roll(str_one[i]);
+            setone.insert(hasher.gethash());
+            cout << str_one.substr(i-k, k) << " " << hasher.gethash() << endl;
         }
+
+        hasher.setbase(str_two.substr(0, k));
         int sizetwo = str_two.size();
         std::set<uint> settwo;
-        for (int i = 0; i < sizetwo - k + 1; ++i) {
-            settwo.insert((uint)hasher(str_two.substr(i, k)));
+        settwo.insert(hasher.gethash());
+        for (int i = k; i < sizetwo; ++i) {
+            hasher.roll(str_two[i]);
+            settwo.insert(hasher.gethash());
         }
 
         std::set<uint>::const_iterator itone = setone.begin();

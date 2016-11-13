@@ -9,16 +9,14 @@ using namespace std;
 class RollingHasher {
 
 private:
-    const uint prime_pro;
-    const uint prime_mod;
+    const ulong prime_pro;
     queue<char> next_out;
-    uint prime_powered;
-    uint hashval;
+    ulong prime_powered;
+    ulong hashval;
 
 public:
-    RollingHasher(uint prime, const string &base) :
-            prime_pro(prime_pro),
-            prime_mod(prime_mod)
+    RollingHasher(ulong prime, const string &base) :
+            prime_pro(prime)
     {
         setbase(base);
     }
@@ -29,23 +27,27 @@ public:
         }
         hashval = 0;
         prime_powered = 1;
-        string::const_iterator ch = base.begin();
-        while (ch != base.end()) {
-            hashval = (short)(hashval + ((*ch) * prime_powered));
-            prime_powered = (short)(prime_powered * prime_pro);
-            next_out.push(*ch);
-            ++ch;
+        for (int i = 0; i < base.size(); ++i) {
+            ulong charval = (ulong)base[i];
+            hashval = (hashval + charval * prime_powered);
+            hashval = hashval & 4294967295;
+            prime_powered = prime_powered*prime_pro;
+            prime_powered = prime_powered & 4294967295;
+            next_out.push(base[i]);
         }
     }
 
     void roll(char c) {
+        ulong out = (ulong)next_out.front();
         next_out.push(c);
-        char out = next_out.front();
-        hashval = (short)((hashval - out) / prime_pro + c * prime_powered);
         next_out.pop();
+        hashval = hashval - out;
+        hashval = hashval / prime_pro;
+        hashval = hashval + (ulong)c * prime_pro;
+        hashval = hashval & 4294967295;
     }
 
-    short gethash() {
+    uint gethash() {
         return hashval;
     }
 
