@@ -13,14 +13,14 @@ namespace utils {
         return str;
     }
 
-    uint pow_mod(uint a, uint b, uint mod) {
+    uint pow_mod(long a, long b, long mod) {
         if (b == 0) {
             return 1;
         }
         if (b == 1) {
             return a % mod;
         }
-        uint powa = pow_mod(a, b/2, mod);
+        long powa = pow_mod(a, b/2, mod);
         powa = powa*powa;
         if (b & 1) {
             powa = powa*a;

@@ -29,10 +29,7 @@ public:
             next_out.pop();
         }
         hashval = 0;
-        prime_powered = 1;
-        for (int i = 0; i < base_str.size() - 1; ++i) {
-            prime_powered = (prime_powered * prime) % 4294967296;
-        }
+        prime_powered = utils::pow_mod(prime, base_str.size() - 1, 4294967296);
         for (int i = 0; i < base_str.size(); ++i) {
             hashval = ((hashval * prime) + base_str[i]) % 4294967296;
             next_out.push(base_str[i]);
