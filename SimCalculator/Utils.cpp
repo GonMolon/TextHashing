@@ -6,8 +6,7 @@ using namespace std;
 
 string filetostring(ifstream &file) {
     string str;
-    str.assign( (std::istreambuf_iterator<char>(file) ),
-                (std::istreambuf_iterator<char>()    ) );
+    str.assign((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
     return str;
 }
 

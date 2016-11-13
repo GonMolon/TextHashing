@@ -26,24 +26,9 @@ private:
 
 public:
 
-    Jaccard_hash_order(string nameone, string nametwo, int k) {
-        if (k < 1) {
-            std::cerr << "K value too small! Minimum: 1" << std::endl;
-            exit(1);
-        }
-        ifstream fileone(nameone);
-        if (fileone.fail()) {
-            std::cerr << "Unable to open file " << nameone << std::endl;
-            exit(1);
-        }
-        ifstream filetwo(nametwo);
-        if (filetwo.fail()) {
-            std::cerr << "Unable to open file " << nametwo << std::endl;
-            exit(1);
-        }
-
-        str_one = filetostring(fileone);
-        str_two = filetostring(filetwo);
+    Jaccard_hash_order(string s1, string s2, int k) {
+        this->str_one = s1;
+        this->str_two = s2;
         this->k = k;
 
         clock_t ini = clock();
