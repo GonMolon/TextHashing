@@ -24,6 +24,7 @@ private:
 
 public:
 
+
     Jaccard_fool(string s1, string s2, int k) {
         this->str_one = s1;
         this->str_two = s2;
