@@ -63,24 +63,13 @@ public:
     h_type operator()(h_type k) const {
         return (h_type) (((a*k + b) % p) % m);
     }
-
-    void print() {
-        for(int i = 0; i < m; ++i) {
-            cout << (*this)(i) << " ";
-        }
-        cout << endl;
-        /*
-        cout << "a = " << a << endl;
-        cout << "b = " << b << endl;
-        cout << "p = " << p << endl;*/
-    }
 };
 
 enum status {
     FIRST, SECOND, BOTH
 };
 
-typedef unordered_map<short, status> union_set;
+typedef unordered_map<char, status> union_set;
 
 void fill(union_set& m, const string& s, int k, status st) {
     hash<string> hashFunction;
@@ -89,9 +78,11 @@ void fill(union_set& m, const string& s, int k, status st) {
         for(int j = 0; j < k; ++j) {
             shingle[j] = s[i+j];
         }
-        pair<union_set::iterator, bool> result = m.insert(pair<short, status>((short)hashFunction(shingle), st));
+        pair<union_set::iterator, bool> result = m.insert(pair<h_type, status>(hashFunction(shingle), st));
         if(!result.second) {
-            result.first->second = BOTH;
+            if(result.first->second != st) {
+                result.first->second = BOTH;
+            }
         }
     }
 }
@@ -142,7 +133,6 @@ float computeSim(const vector<int>& sig1, const vector<int>& sig2) {
 }
 
 float computeMinhash(const string& file1, const string& file2, int k, int t, int seed) {
-    srand(seed);
     union_set m;
     fill(m, file1, k, FIRST);
     fill(m, file2, k, SECOND);
