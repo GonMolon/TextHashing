@@ -2,10 +2,7 @@
 #define A_TEXTHASHING_UTILITIES
 
 #include <fstream>
-#include <random>
 using namespace std;
-
-typedef unsigned int uint;
 
 namespace utils {
 
@@ -30,93 +27,7 @@ namespace utils {
         }
         return powa % mod;
     }
-
-    bool is_prime(uint x) {
-        uint i = 3;
-        uint maxi = (uint)ceil(sqrt(x) + 1);
-        while(i < maxi) {
-            uint q = x/i;
-            if(q < i) {
-                return true;
-            }
-            if(x == q * i) {
-                return false;
-            }
-            i += 2;
-        }
-        return false;
-    }
-
-    uint get_next_prime(uint n) {
-        ++n;
-        if(n <= 2) {
-            return 2;
-        }
-        if(!(n & 1)) {
-            ++n;
-        }
-        while(!is_prime(n)) {
-            n += 2;
-        }
-        return n;
-    }
 }
-
-
-class Hash {
-private:
-    uint m;
-    uint a;
-    uint b;
-    uint p;
-    mt19937 rng;
-
-    bool is_prime(uint x) {
-        uint i = 3;
-        while(true) {
-            uint q = x/i;
-            if(q < i) {
-                return true;
-            }
-            if(x == q * i) {
-                return false;
-            }
-            i += 2;
-        }
-    }
-
-    uint generateNextPrime(uint n) {
-        if(n <= 2) {
-            return 2;
-        }
-        if(!(n & 1)) {
-            ++n;
-        }
-        while(!is_prime(n)) {
-            n += 2;
-        }
-        return n;
-    }
-public:
-
-    Hash(uint m, uint u, int seed) {
-        this->m = m;
-        p = generateNextPrime(u);
-
-        mt19937 rng(seed);
-        uniform_int_distribution<uint> dist(0, p-1);
-
-        a = dist(rng);
-        while(a == 0) {
-            a = dist(rng);
-        }
-        b = dist(rng);
-    }
-
-    uint operator()(uint k) {
-        return ((a*k + b) % p) % m;
-    }
-};
 
 /*
 MAGI:

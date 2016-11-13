@@ -6,8 +6,9 @@
 #include <set>
 #include <string>
 #include <time.h>
-#include "Utils.cpp"
 #include <vector>
+#include "Utils.cpp"
+
 using namespace std;
 
 class Jaccard_hash_order {
@@ -20,35 +21,16 @@ private:
     int shingles_intersection;
     int shingles_union;
 
-    double time;
     ulong memory;
 
 public:
 
-    Jaccard_hash_order(string nameone, string nametwo, int k) {
-        if (k < 1) {
-            std::cerr << "K value too small! Minimum: 1" << std::endl;
-            exit(1);
-        }
-        ifstream fileone(nameone);
-        if (fileone.fail()) {
-            std::cerr << "Unable to open file " << nameone << std::endl;
-            exit(1);
-        }
-        ifstream filetwo(nametwo);
-        if (filetwo.fail()) {
-            std::cerr << "Unable to open file " << nametwo << std::endl;
-            exit(1);
-        }
-
-        str_one = utils::file_to_string(fileone);
-        str_two = utils::file_to_string(filetwo);
+    Jaccard_hash_order(string s1, string s2, int k) {
+        this->str_one = s1;
+        this->str_two = s2;
         this->k = k;
 
-        clock_t ini = clock();
         compute();
-        clock_t fin = clock();
-        time = double(fin - ini) / CLOCKS_PER_SEC;
 
         str_one.clear();
         str_two.clear();
@@ -94,10 +76,6 @@ public:
 
     double get_memory() {
         return memory;
-    }
-
-    double get_time() {
-        return time;
     }
 };
 
