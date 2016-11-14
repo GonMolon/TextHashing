@@ -21,6 +21,8 @@ void usage () {
     cerr << endl;
     cerr << "    Possible MODEs are:" << endl;
     cerr << endl << bold_on;
+    cerr << "        all" << endl;
+    cerr << endl;
     cerr << "        jaccard" << endl;
     cerr << endl;
     cerr << "        jaccard_hash" << endl;
@@ -164,11 +166,7 @@ int main(int argc, char *argv[]) {
         usage();
     }
 
-    if (e) {
-        cout << setw(12) << "MODE" << setw(14) << "SEED" << setw(5) << "K" << setw(5) << "T";
-        cout << setw(13) << "SIM" <<  setw(13) << "TIME" << endl;
-    }
-    else {
+    if (!e) {
         cout << "===========================" << endl;
     }
     cout.precision(8);

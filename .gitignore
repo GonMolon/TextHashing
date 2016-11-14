@@ -32,8 +32,9 @@
 .idea/
 
 # Make
-makefile
 *.inp
 *.out
 *.exe
-out/
+
+# Fuse
+*.fuse*
