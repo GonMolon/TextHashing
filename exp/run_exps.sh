@@ -1,10 +1,12 @@
 #!/bin/bash
 
 MAKEFILE="makefile"
-SIMEXE="SimCalculator"
+SIMEXE="SimCalculator.exe"
 RESULTSDIR="results"
 BACKUPDIR="results_backup"
 SOURCESDIR="sources"
+
+make
 
 echo "Creating directory ${RESULTSDIR}"
 if [ -d "${RESULTSDIR}" ]; then
@@ -23,8 +25,15 @@ JACCARD_MODES=(jaccard jaccard_hash jaccard_roll)
 MINHASH_MODES=(minhash minhash_roll)
 SOURCES=(source50 source100 source1000 source10000)
 
+INI_K=5
+INC_K=1
+MAX_K=12
+
+INI_T=1000
+INC_T=1000
+MAX_T=10000
+
 # Jaccards ==============================================================
-MAX_K=50
 echo "Running jaccard modes"
 for mode in ${JACCARD_MODES[@]}
 do
@@ -32,7 +41,7 @@ do
     do
         for file2 in $(ls ./${SOURCESDIR} --file-type | grep "${file1}_")
         do
-            for k in {5..$MAX_K}
+            for k in $(seq $INI_K $INC_K $MAX_K)
             do
                 seed=$(./seed_gen.exe)
                 filetwo="${SOURCESDIR}/${file2}"
@@ -48,7 +57,6 @@ done
 
 
 # Minhash ==============================================================
-MAX_K=50
 echo "Running minhash modes"
 for mode in ${MINHASH_MODES[@]}
 do
@@ -56,9 +64,9 @@ do
     do
         for file2 in $(ls ./${SOURCESDIR} --file-type | grep "${file1}_")
         do
-            for k in {5..$MAX_K}
+            for k in $(seq $INI_K $INC_K $MAX_K)
             do
-                for t in $(seq 100 100 10000)
+                for t in $(seq $INI_T $INC_T $MAX_T)
                 do
                     seed=$(./seed_gen.exe)
                     filetwo="${SOURCESDIR}/${file2}"

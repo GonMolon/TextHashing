@@ -3,5 +3,5 @@
 
 int main() 
 {
-    std::cout << std::random_device()() << std::endl;
+    std::cout << (int)std::random_device()() << std::endl;
 }
