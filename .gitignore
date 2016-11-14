@@ -30,6 +30,7 @@
 
 # CLion
 .idea/
+test/
 
 # Make
 *.inp
