@@ -53,4 +53,12 @@ Dentro del directorio /exp hay cuatro ejecutables:
        
        - seed_gen.exe: usado por el script que genera los experimentos. Genera un entero aleatorio.       
               
-            
+En el directorio /exp también hay:  
+      
+      - gen_sources.sh: genera los ficheros a comparar con los ficheros source del directorio /exp, 
+        guarda los ficheros generados en el directorio /exp/sources.
+      
+      - run_exps.sh: crea un directorio /results, en el que hay los resultados de todos los experimentos testeados
+        por el script, ejecuta el programa SimCalculator con distintos parametros para poder compararlos y guarda los
+        resultados en el directorio mencionado anteriormente.
+        
