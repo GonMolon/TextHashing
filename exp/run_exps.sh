@@ -25,13 +25,10 @@ JACCARD_MODES=(jaccard jaccard_hash jaccard_roll)
 MINHASH_MODES=(minhash minhash_roll)
 SOURCES=(source50 source100 source1000 source10000)
 
-INI_K=5
+INI_K=6
 INC_K=1
 MAX_K=12
 
-INI_T=1000
-INC_T=1000
-MAX_T=10000
 
 # Jaccards ==============================================================
 echo "Running jaccard modes"
@@ -57,6 +54,15 @@ done
 
 
 # Minhash ==============================================================
+
+INI_K=6
+INC_K=1
+MAX_K=12
+
+INI_T=50
+INC_T=50
+MAX_T=1000
+
 echo "Running minhash modes"
 for mode in ${MINHASH_MODES[@]}
 do
