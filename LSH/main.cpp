@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
         while(file = readdir(dir)){
             if(utils::isTextFile(file->d_name)) {
                 names.push_back(file->d_name);
-                ifstream is = ifstream(path + file->d_name);
+                ifstream is(path + file->d_name);
                 files.push_back(utils::file_to_string(is));
                 if(files[files.size()-1].size() < k) {
                     cerr << "At least one file has length < k" << endl;
