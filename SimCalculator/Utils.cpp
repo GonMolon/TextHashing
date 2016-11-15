@@ -30,25 +30,12 @@ namespace utils {
         return powa % mod;
     }
 
-    string getFileName(const string& path) {
-        int k = -1;
-        bool found = false;
-        for(int i = path.size()-1; !found && i >= 0; --i) {
-            if(path[i] == '/') {
-                k = i;
-                found = true;
-            }
-        }
-        if(k == -1) {
-            return "";
+    bool isTextFile(const string& fileName) {
+        int l = fileName.size();
+        if(l >= 5) {
+            return fileName.substr(l-4, l) == ".txt";
         } else {
-            string s(path.size()-k-1, ' ');
-            ++k;
-            for(int i = 0; i < s.size(); ++i) {
-                s[i] = path[k];
-                ++k;
-            }
-            return s;
+            return false;
         }
     }
 }
