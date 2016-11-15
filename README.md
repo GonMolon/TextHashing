@@ -12,18 +12,18 @@ Dentro del directorio /exp hay cuatro ejecutables:
        - generator.exe: genera una permutación aleatoria de las palabras de un fichero. 
             Parámetros (fichero_entrada fichero_salida [-w palabras por linea][-s seed]):
             
-              *fichero_entrada: documento con el que crearemos la permutación.
-              *fihcero_salida: documento en el que habrá la permutación aleatoria del fichero_entrada.
-              *-w palabaras por linea: número de palabras por linea que contendrá el fichero de salida.
-              *-s seed: semilla a partir de la cual se generarán números aleatorios.
+              ·fichero_entrada: documento con el que crearemos la permutación.
+              ·fihcero_salida: documento en el que habrá la permutación aleatoria del fichero_entrada.
+              ·-w palabaras por linea: número de palabras por linea que contendrá el fichero de salida.
+              ·-s seed: semilla a partir de la cual se generarán números aleatorios.
        
        
        - SimCalculator.exe: programa principal que calcula el coeficiente de similaridad entre documentos, 
          con jaccard y minhash. 
             Parámetros (fichero1 fichero2 modo), dependiendo del modo puede tener más parametros:
             
-              *fichero1 y fichero2: documentos a comparar.
-              *modo:
+              ·fichero1 y fichero2: documentos a comparar.
+              ·modo, puede ser uno de los siguientes:
                   + all: ejecuta todos los possibles modos.
                   + jaccard: hace el cálculo a partir de guardar k-shingles como strings en un conjunto para cada fichero.
                   + jaccard_hash: realiza el cálculo almacenando k-shingles como hashes de 4 bytes en un conjunto para cada
@@ -43,12 +43,12 @@ Dentro del directorio /exp hay cuatro ejecutables:
        - lsh.exe: programa que aplica el algoritmo de LSH a un conjunto de documentos dado. 
               Parámetros (PATH_PATTERN k t min seed):
               
-                *PATH_PATTERN: path del directorio contenedor de los documentos que se quieren analizar,
+                ·PATH_PATTERN: path del directorio contenedor de los documentos que se quieren analizar,
                  el programa cojerá todos los archivos .txt del directorio.
-                *k: tamaño de los shingles.
-                *t: número de funciones de hash.
-                *min: coeficiente mínimo para que dos documentos sean comparables. (valor entre 0 y 1).
-                *seed: semilla que se usará para generar las funciones de hash que generarán las signatures.
+                ·k: tamaño de los shingles.
+                ·t: número de funciones de hash.
+                ·min: coeficiente mínimo para que dos documentos sean comparables. (valor entre 0 y 1).
+                ·seed: semilla que se usará para generar las funciones de hash que generarán las signatures.
               
        
        - seed_gen.exe: usado por el script que genera los experimentos. Genera un entero aleatorio.       
