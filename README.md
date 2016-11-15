@@ -41,7 +41,7 @@ Dentro del directorio /exp hay cuatro ejecutables:
          
          
        - lsh.exe: programa que aplica el algoritmo de LSH a un conjunto de documentos dado. 
-              Parámetros (PATH_PATTERN k t min seed):
+              Parámetros (PATH k t min seed):
               
                 ·PATH: directorio contenedor de los documentos que se quieren analizar,
                  el programa cojerá todos los archivos .txt del directorio.
