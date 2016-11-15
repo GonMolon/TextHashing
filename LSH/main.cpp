@@ -122,6 +122,15 @@ int main(int argc, char *argv[]) {
     double min = stof(string(argv[4]));
     int seed = stoi(string(argv[5]));
 
+    if(path.length() == 0) {
+        cerr << "Please, provide a path" << endl;
+        exit(1);
+    }
+
+    if(path[path.size()-1] != '/') {
+        path.push_back('/');
+    }
+
     vector<string> names;
     vector<string> files;
 
