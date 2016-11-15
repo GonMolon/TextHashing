@@ -106,7 +106,7 @@ void computeLSH(const vector<string>& names, const vector<string>& files, int k,
 
 void usage(const std::string &filename) {
     cerr << "LSH usage:\n";
-    cerr << "\t$" << filename << " PATH k t seed\n";
+    cerr << "\t$" << filename << " PATH k t min seed\n";
     cerr << "~~~~~~~~~~~~~~~~\n";
     exit(1);
 }
