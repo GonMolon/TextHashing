@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAKEFILE="makefile"
+MAKEFILE="../makefile"
 SIMEXE="SimCalculator.exe"
 RESULTSDIR="results"
 BACKUPDIR="results_backup"
