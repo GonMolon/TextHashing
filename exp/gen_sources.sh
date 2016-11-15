@@ -6,8 +6,8 @@ if ! [ -d ./sources ]; then
     do
         for i in $(seq -f "%02g" 1 20)
         do
-            echo ./generator.exe "${file}" "./sources/${file}_${i}"
-            ./generator.exe "${file}" "./sources/${file}_${i}"
+            echo ./generator.exe "${file}" "./sources/${file}_${i}.txt"
+            ./generator.exe "${file}" "./sources/${file}_${i}.txt"
         done
     done
 fi

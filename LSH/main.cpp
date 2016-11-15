@@ -5,9 +5,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <cmath>
-#include <string>
 #include <unordered_map>
 #include <set>
+#include <dirent.h>
 #include "../SimCalculator/Minhash.cpp"
 #include "../SimCalculator/Utils.cpp"
 using namespace std;
@@ -45,20 +45,34 @@ struct candidates {
 
 typedef unordered_map<int, vector<int> > clusters;
 
-void treatCandidates(const vector<string>& names, const candidates& c, const vector<signature>& m) {
+void treatCandidates(const vector<string>& names, const candidates& c, const vector<signature>& m, double min) {
+    int falsePositives = 0;
+    cout << "------------------------------------------------------------------" << endl;
+    cout << "The follow pair of files may have a similarity greater than  " << min << endl;
     set<candidate>::iterator i = c.s.begin();
     while(i != c.s.end()) {
-        cout << "-------------------" << endl;
+        cout << "------------------------------------------------------------------" << endl;
         cout << names[i->first] << endl;
         cout << names[i->second] << endl;
-        cout << "Real sim = " << computeSim(m[i->first], m[i->second]) << endl;
+        double realSim = computeSim(m[i->first], m[i->second]);
+        cout << "Real similarity = " << realSim << endl;
+        if(realSim < min) {
+            ++falsePositives;
+            cout << "FALSE POSITIVE" << endl;
+        }
         ++i;
     }
+    cout << "------------------------------------------------------------------" << endl;
+    cout << "Total of false positives = " << falsePositives << endl;
 }
 
 void computeLSH(const vector<string>& names, const vector<string>& files, int k, int t, double min, int seed) {
     int b = get_b(1, t-1, t, min);
     int r = t/b;
+    if(t != r*b) {
+        cout << "A new t has been fixed to be able to execute the algorithm properly." << endl;
+    }
+    cout << "The final values are: " << endl;
     t = r*b;
     cout << "b = " << b << endl;
     cout << "r = " << r << endl;
@@ -67,10 +81,6 @@ void computeLSH(const vector<string>& names, const vector<string>& files, int k,
     vector<signature> m(files.size());
     for(int i = 0; i < m.size(); ++i) {
         m[i] = generateSignature(k, (files[i]), hashes, true);
-        for(int j = 0; j < m[i].size(); ++j) {
-            cout << m[i][j] << ' ';
-        }
-        cout << endl;
     }
     candidates c;
     for(int i = 0; i < b; ++i) {
@@ -91,7 +101,7 @@ void computeLSH(const vector<string>& names, const vector<string>& files, int k,
             }
         }
     }
-    treatCandidates(names, c, m);
+    treatCandidates(names, c, m, min);
 }
 
 void usage(const std::string &filename) {
@@ -106,33 +116,50 @@ int main(int argc, char *argv[]) {
     if(argc != 6) {
         usage(exec_name);
     }
-    string pattern = string(argv[1]);
+    string path = string(argv[1]);
     int k = stoi(string(argv[2]));
     int t = stoi(string(argv[3]));
-    double min = atof(argv[4]);
+    double min = stof(string(argv[4]));
     int seed = stoi(string(argv[5]));
+
+    if(path.length() == 0) {
+        cerr << "Please, provide a path" << endl;
+        exit(1);
+    }
+
+    if(path[path.size()-1] != '/') {
+        path.push_back('/');
+    }
 
     vector<string> names;
     vector<string> files;
-    int i = 1;
-    string path = pattern + to_string(i) + ".txt";
-    ifstream file(path);
-    while(!file.fail()) {
-        names.push_back(utils::getFileName(path));
-        files.push_back(utils::file_to_string(file));
-        if(files[files.size()-1].size() < k) {
-            cerr << "At least one file has length < k" << endl;
+
+    DIR *dir;
+    struct dirent *file;
+
+    dir = opendir(path.c_str());
+    if(dir != NULL){
+        while(file = readdir(dir)){
+            if(utils::isTextFile(file->d_name)) {
+                names.push_back(file->d_name);
+                ifstream is = ifstream(path + file->d_name);
+                files.push_back(utils::file_to_string(is));
+                if(files[files.size()-1].size() < k) {
+                    cerr << "At least one file has length < k" << endl;
+                    exit(1);
+                }
+            }
+        }
+        closedir(dir);
+        if(files.size() < 2) {
+            cerr << "There must be at least 2 .txt files in the path " << path << endl;
             exit(1);
         }
-        ++i;
-        path = pattern + to_string(i) + ".txt";
-        file = ifstream(path);
-    }
-    if(i <= 2) {
-        cerr << "Files not found" << endl;
+        computeLSH(names, files, k, t, min, seed);
+    } else {
+        cerr << "Path not found" << endl;
         exit(1);
     }
-    computeLSH(names, files, k, t, min, seed);
 }
 
 #endif
