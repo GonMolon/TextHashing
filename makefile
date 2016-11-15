@@ -6,4 +6,4 @@ generator:
 seed_gen:
 	g++ ./exp/seed_gen.cpp -o ./exp/seed_gen.exe --std=c++11
 clear:
-	rm -rf ./exp/*.exe ./exp/sources
+	rm -rf ./exp/*.exe

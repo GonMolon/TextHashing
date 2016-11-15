@@ -6,8 +6,6 @@ RESULTSDIR="results"
 BACKUPDIR="results_backup"
 SOURCESDIR="sources"
 
-make
-
 echo "Creating directory ${RESULTSDIR}"
 if [ -d "${RESULTSDIR}" ]; then
     echo "Found previous results. Creating backup at ${BACKUPDIR}"
